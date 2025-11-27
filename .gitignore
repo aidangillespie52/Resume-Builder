@@ -1,3 +1,5 @@
 **/data.json
-layouts/*.tex
-src/*.pyc
+**/layouts/*.tex
+**/src/*.pyc
+**/__pycache__/
+output/
