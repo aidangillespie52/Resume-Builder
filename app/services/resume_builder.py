@@ -5,11 +5,10 @@ import shutil
 import os
 
 # main.py is inside src/, so we use relative import
-from src.render import render_education, render_experience, render_projects, render_skills
-from src.utils import cleanup_aux_files
+from app.renderers.latex_resume import render_education, render_experience, render_projects, render_skills
+from app.utils.latex import cleanup_aux_files
 
-# Paths
-ROOT = Path(__file__).resolve().parent.parent
+# TODO: Fix this to be relative to project root
 TEMPLATE_PATH = ROOT / "layouts" / "bajaj.tex"
 DATA_PATH     = ROOT / "data.json"
 OUTPUT_TEX    = ROOT / "resume.tex"
@@ -50,7 +49,7 @@ def run_pdflatex(tex_path: Path):
     
     return final_path
 
-def main():
+def build_resume():
     # Read template + data
     template = TEMPLATE_PATH.read_text(encoding="utf-8")
     data = json.load(DATA_PATH.open("r", encoding="utf-8"))
@@ -82,4 +81,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    build_resume()
