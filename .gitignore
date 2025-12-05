@@ -3,3 +3,7 @@
 **/src/*.pyc
 **/__pycache__/
 output/
+**/.env
+
+# one offs
+**/fake_cv.txt
