@@ -1,6 +1,6 @@
 # render.py
 
-from src.utils import latex_escape
+from app.utils.latex import latex_escape
 
 def render_education(education_list):
     blocks = []
