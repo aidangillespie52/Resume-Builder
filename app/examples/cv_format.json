@@ -1,0 +1,54 @@
+{
+  "name": "FULL NAME (e.g., Aidan Gillespie)",
+  "email": "EMAIL ADDRESS (e.g., aidan@example.com)",
+  "phone": "PHONE NUMBER (e.g., 555-123-4567)",
+  "linkedin": "LINKEDIN URL (e.g., https://www.linkedin.com/in/your-handle)",
+
+  "education": [
+    {
+      "institution": "SCHOOL NAME (e.g., Tennessee Tech University)",
+      "dates": "DATE RANGE (e.g., Aug 2021–May 2025)",
+      "degree": "DEGREE + MAJOR (e.g., B.S. in Computer Science)",
+      "details": "SHORT SUMMARY (e.g., Concentration in data science and machine learning.)",
+      "gpa": "OPTIONAL GPA (e.g., 3.49) OR LEAVE EMPTY/REMOVE"
+    }
+  ],
+
+  "experience": [
+    {
+      "company": "COMPANY / ORG NAME (e.g., Altec)",
+      "dates": "DATE RANGE (e.g., May 2024–Present)",
+      "role": "JOB TITLE (e.g., Product Engineer – Data Analytics)",
+      "summary": "1–2 SENTENCE OVERVIEW OF ROLE.",
+      "bullets": [
+        "RESULT-FOCUSED BULLET (e.g., Built X that improved Y by Z%).",
+        "ANOTHER IMPACTFUL BULLET.",
+        "KEEP BULLETS SHORT, START WITH STRONG VERBS."
+      ]
+    }
+  ],
+
+  "projects": [
+    {
+      "name": "PROJECT NAME (e.g., Sudoku Sage)",
+      "summary": "1–2 SENTENCE DESCRIPTION OF WHAT THIS PROJECT DOES.",
+      "tech": [
+        "TECH STACK ITEM (e.g., FastAPI)",
+        "ANOTHER TECH (e.g., LangChain)",
+        "ANOTHER TECH (e.g., SQLite)"
+      ],
+      "bullets": [
+        "KEY CONTRIBUTION OR FEATURE.",
+        "ANOTHER KEY CONTRIBUTION.",
+        "FOCUS ON IMPACT OR TECHNIQUE."
+      ]
+    }
+  ],
+
+  "skills": [
+    "SKILL OR TECHNOLOGY (e.g., Python)",
+    "ANOTHER SKILL (e.g., Go)",
+    "ANOTHER SKILL (e.g., FastAPI)",
+    "KEEP THIS AS A FLAT LIST OF STRINGS."
+  ]
+}
