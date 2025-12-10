@@ -1,48 +1,61 @@
 from langchain_openai import ChatOpenAI
-from langchain_core.prompts import ChatPromptTemplate
-from langchain_core.output_parsers import StrOutputParser
-from app.utils.registry import PromptRegistry
+from langchain_core.messages import SystemMessage, HumanMessage
+from app.utils.registry import ExampleRegistry, PromptRegistry, get_example, get_prompt
 import os
 from dotenv import load_dotenv
+import re
 
 load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
-def extract_json(text: str) -> str:
-    """
-    Extract JSON substring from text.
-    Assumes the first '{' and the last '}' enclose the JSON.
-    """
-    start = text.find("{")
-    end = text.rfind("}") + 1
-    if start == -1 or end == -1:
-        raise ValueError("No JSON object found in the text.")
-    return text[start:end]
+job_description = \
+"""
+I need someone who knows unity and object detection
+"""
 
-async def convert_cv_to_json(cv_text: str, model: str = "gpt-4.1-mini") -> str:
-    prompt = ChatPromptTemplate.from_messages([
-        ("system", PromptRegistry.SYSTEM.value),
-        ("human", "Convert the following CV text to JSON format:\n\n{cv_text}")
-    ])
+def extract_json(s: str) -> str:
+    match = re.search(r'\{.*\}', s, re.DOTALL)
+    if not match:
+        raise ValueError("No JSON object found in model output.")
+    return match.group(0)
 
-    model = ChatOpenAI(
+async def convert_cv_to_json(
+    cv_text: str,
+    model: str = "gpt-4.1-mini",
+) -> str:
+    llm = ChatOpenAI(
         model=model,
-        temperature=0.2,
-        api_key=OPENAI_API_KEY
+        temperature=0.0,  # tighter / deterministic
+        api_key=OPENAI_API_KEY,
+        model_kwargs={
+            "response_format": {"type": "json_object"}
+        },
+    )
+    
+    sys_prompt = get_prompt(PromptRegistry.SYSTEM)
+    cv_to_json_prompt = get_prompt(PromptRegistry.CV_TO_JSON)
+    cv_to_json_example = get_example(ExampleRegistry.CV_JSON_EXAMPLE)
+    job_desc = job_description.strip()
+    
+    system_msg = SystemMessage(content=sys_prompt)
+    human_msg = HumanMessage(
+        content=cv_to_json_prompt.replace(
+            "<<<DATA_TO_CONVERT>>>", cv_text
+        ).replace(
+            "<<<CV_FORMAT>>>", cv_to_json_example
+        ).replace(
+            "<<<JOB_DESCRIPTION>>>", job_desc
+        )
     )
 
-    parser = StrOutputParser()
+    resp = await llm.ainvoke([system_msg, human_msg])
+    result = resp.content  # should already be pure JSON
 
-    chain = prompt | model | parser
-
-    result = chain.invoke({"cv_text": cv_text})
-    
     try:
         result = extract_json(result)
-    except ValueError:
-        raise ValueError("Failed to extract JSON from the model output.")
-    
-    print(result)
+    except ValueError as e:
+        raise ValueError(f"Failed to extract JSON from the model output. {e}")
+
     return result
 
 if __name__ == "__main__":
