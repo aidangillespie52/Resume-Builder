@@ -50,7 +50,7 @@ def escape_all(obj):
         return obj
     
 def tex_to_pdf(tex_src: str, compiler: str = "pdflatex") -> bytes:
-    out_dir = Path("latex_debug")
+    out_dir = Path("debug/latex")
     out_dir.mkdir(exist_ok=True)
 
     tex_path = out_dir / "resume.tex"
