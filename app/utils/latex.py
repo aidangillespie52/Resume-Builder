@@ -1,29 +1,25 @@
 # app/utils/latex.py
 
 from pathlib import Path
+import re
 
-def latex_escape(s: str) -> str:
-    """
-    Escape characters that have special meaning in LaTeX.
-    Use this on any plain-text coming from JSON.
-    """
-    replacements = {
-        "\\": r"\textbackslash{}",
-        "&": r"\&",
-        "%": r"\%",
-        "$": r"\$",
-        "#": r"\#",
-        "_": r"\_",
-        "{": r"\{",
-        "}": r"\}",
-        "~": r"\textasciitilde{}",
-        "^": r"\textasciicircum{}",
-    }
-    for old, new in replacements.items():
-        s = s.replace(old, new)
-    return s
+def latex_escape(text: str) -> str:
+    if not isinstance(text, str):
+        return text
 
-def cleanup_aux_files(tex_path: Path):
+    # Escape &, %, $, #, _, ~, ^
+    # but ONLY when they are NOT already escaped with a backslash.
+    text = re.sub(r'(?<!\\)&', r'\&', text)
+    text = re.sub(r'(?<!\\)%', r'\%', text)
+    text = re.sub(r'(?<!\\)\$', r'\$', text)
+    text = re.sub(r'(?<!\\)#', r'\#', text)
+    text = re.sub(r'(?<!\\)_', r'\_', text)
+    text = re.sub(r'(?<!\\)~', r'\textasciitilde{}', text)
+    text = re.sub(r'(?<!\\)\^', r'\textasciicircum{}', text)
+
+    return text
+
+def cleanup_aux_files(tex_path: Path) -> None:
     for ext in [".aux", ".log", ".out", ".toc"]:
         f = tex_path.with_suffix(ext)
         if f.exists():
